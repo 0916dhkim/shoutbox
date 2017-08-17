@@ -1,0 +1,8 @@
+# Compilation result
+dist/
+
+# Node
+node_modules/
+
+# Chat database
+*.db
