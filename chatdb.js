@@ -71,4 +71,12 @@ function createMessageTable() {
     );
 }
 
-module.exports = db;
+exports.getMessagesSince = function(date, callback) {
+    // Query all messages sent after given date, and call optional callback function.
+    // The first parameter of the callback is err.
+    // The second parameter of the call back is an array of message objects.
+    db.all(
+        'SELECT ROWID AS ID, * FROM MESSAGES WHERE DATE > ' + date + ' ORDER BY DATE ASC',
+        (err, rows) => callback ? callback(err, rows) : null
+    );
+};
