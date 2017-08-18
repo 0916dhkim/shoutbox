@@ -7,7 +7,7 @@ const chatdb = require('./chatdb.js');
 app.use(express.static('dist'));
 app.use(express.static('static'));
 
-app.get('/messages/since/:date', (req, res) => {
+app.get('/messages/since/date/:date', (req, res) => {
     chatdb.getMessagesSince(req.params.date, (err, messages) => {
         if (err) {
             // Return internal server error code if query fails.
