@@ -24,7 +24,7 @@ function dbErrorHandler(err_msg) {
 
 function initializeDB() {
     db.all(
-        'SELECT TBL_NAME FROM SQLITE_MASTER;',
+        'SELECT tbl_name FROM sqlite_master;',
         (err, rows) => {
             if (err) {
                 dbErrorHandler('Table name query failed');
@@ -41,7 +41,7 @@ function initializeDB() {
 
 function checkTableNames(tableNames, ifValid, ifNotValid) {
     console.log('Checking table names...');
-    var requiredNames = ['MESSAGES'];
+    var requiredNames = ['messages'];
 
     console.log('Required table names: ' + requiredNames);
     console.log('Existing table names: ' + tableNames);
@@ -59,8 +59,8 @@ function checkTableNames(tableNames, ifValid, ifNotValid) {
 function createMessageTable() {
     console.log('Creating message table...');
     db.exec(
-        'CREATE TABLE MESSAGES ( DATE INT, SENDER VARCHAR(255), CONTENT TEXT );' +
-        'CREATE INDEX DATE_IND ON MESSAGES(DATE);',
+        'CREATE TABLE messages ( date INT, sender VARCHAR(255), content TEXT );' +
+        'CREATE INDEX date_ind ON messages(date);',
         (error) => {
             if (error) {
                 dbErrorHandler('Message table creation failed');
@@ -71,12 +71,44 @@ function createMessageTable() {
     );
 }
 
-exports.getMessagesSince = function(date, callback) {
+function getMessagesSinceDate(date, callback) {
     // Query all messages sent after given date, and call optional callback function.
     // The first parameter of the callback is err.
     // The second parameter of the call back is an array of message objects.
     db.all(
-        'SELECT ROWID AS ID, * FROM MESSAGES WHERE DATE > ' + date + ' ORDER BY DATE ASC',
-        (err, rows) => callback ? callback(err, rows) : null
+        'SELECT rowid AS id, * FROM messages WHERE date >= ' + date + ' ORDER BY date ASC',
+        (err, rows) => {
+            if (err) {
+                if (callback) {
+                    callback(err);
+                }
+            } else if (callback) {
+                callback(err, rows);
+            }
+        }
     );
 };
+
+function getMessagesSinceID(id, callback) {
+    // Query all messages sent after given message ID, and call opetional callback function.
+    // The first parameter of the callback is err.
+    // The second parameter of the callback is an array of message objects.
+
+    // Find the date of the given message ID.
+    db.get(
+        'SELECT date FROM messages WHERE rowid = ' + id,
+        (err, row) => {
+            if (err) {
+                if (callback) {
+                    callback(err);
+                }
+            } else {
+                getMessagesSinceDate(row.date, callback);
+            }
+        }
+    );
+};
+
+// Export functions.
+exports.getMessagesSinceDate = getMessagesSinceDate;
+exports.getMessagesSinceID = getMessagesSinceID;
