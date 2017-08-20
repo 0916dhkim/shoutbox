@@ -1,4 +1,5 @@
 import React from 'react';
+import style from './chat.css.js';
 
 export default class extends React.Component {
     constructor(props) {
@@ -12,10 +13,10 @@ export default class extends React.Component {
 
     render() {
         return (
-            <div ref={x=>this.container=x}>
-                <div>{this.props.sender}</div>
-                <div>{this.props.content}</div>
-                <div>{new Date(this.props.date).toISOString()}</div>
+            <div ref={x=>this.container=x} style={style.chatElement}>
+                <div style={style.chatSender}>{this.props.sender}</div>
+                <div style={style.chatContent}>{this.props.content}</div>
+                <div style={style.chatDate}>{new Date(this.props.date).toISOString()}</div>
             </div>
         );
     }

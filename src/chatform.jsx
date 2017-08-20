@@ -46,8 +46,14 @@ export default class extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit} style={style.chatForm}>
-                <input type='text' value={this.state.sender} onChange={this.handleSenderChange} />
-                <input type='text' value={this.state.content} onChange={this.handleContentChange} />
+                <input type='text'
+                value={this.state.sender}
+                onChange={this.handleSenderChange}
+                style={style.senderInput} />
+                <input type='text'
+                value={this.state.content}
+                onChange={this.handleContentChange}
+                style={style.contentInput} />
                 <input type='submit' style={{display:'none'}} />
             </form>
         );
