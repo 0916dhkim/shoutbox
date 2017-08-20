@@ -5,43 +5,12 @@ function messageToChatElement(message) {
     return <ChatElement key={message.id} sender={message.sender} content={message.content} date={message.date} />
 }
 
-function recursiveAddMessage(message, list, index) {
-    if (message.date < list[index].date) {
-        // If new message is earlier than the message at index,
-        // insert new message at index.
-        return list.slice().splice(index,0,message);
-    } else if (message.date > list[index].date) {
-        // If new message is older than the message at index,
-        if (index < list.length) {
-            // If there are unchecked messages in the list,
-            // move to the next index.
-            return recursiveAddMessage(message, list, index + 1);
-        } else {
-            // If new message is older than all messages in the list,
-            // concat new message at the end of the list.
-            return list.concat([message]);
-        }
-    } else {
-        // If message has same time as the message at index,
-        if (message.id === list[index].id) {
-            // If two messages are identical,
-            // do not add new message to the list
-            // because it is already in the list.
-            return list.slice();
-        } else {
-            // If two messages are not identical (with the same time),
-            // insert new message at index.
-            return list.slice().splice(index,0,message);
-        }
-    }
-}
-
 export default class extends React.Component {
     constructor(props) {
         super(props);
 
         // Bind methods that needs access to props and state of the component.
-        this.addMessage = this.addMessage.bind(this);
+        this.addMessages = this.addMessages.bind(this);
         this.updateChat = this.updateChat.bind(this);
 
         this.state = {
@@ -50,14 +19,47 @@ export default class extends React.Component {
         };
     }
 
-    addMessage(message) {
+    addMessages(messages) {
         this.setState((prevState, props) => {
-            if (prevState.messages.length === 0) {
-                // If there was no message in the list before,
-                return { messages: [message] };
-            } else {
-                return { messages: recursiveAddMessage(message, prevState.messages, 0) };
+            var ret = [];
+            var prevIndex = 0;
+            var curIndex = 0;
+
+            while (prevIndex < prevState.messages.length || curIndex < messages.length) {
+                if (prevIndex === prevState.messages.length) {
+                    // If end of previous messages,
+                    // add a new message.
+                    ret.push(messages[curIndex++]);
+                } else if (curIndex === messages.length) {
+                    // If end of new messages,
+                    // add a previous message.
+                    ret.push(prevState.messages[prevIndex++]);
+                } else if (messages[curIndex].date < prevState.messages[prevIndex].date) {
+                    // If new message is earlier than previous message,
+                    // add a new message.
+                    ret.push(messages[curIndex++]);
+                } else if (messages[curIndex].date > prevState.messages[prevIndex].date) {
+                    // If previous message is earlier than new message,
+                    // add a previous message.
+                    ret.push(prevState.messages[prevIndex++]);
+                } else {
+                    // If previous message has same date as new message,
+                    // compare message id.
+                    if (prevState.messages[prevIndex].id === messages[curIndex].id) {
+                        // If two messages are identical,
+                        // only add previous message.
+                        ret.push(prevState.messages[prevIndex++]);
+                        curIndex++;
+                    } else {
+                        // If two messages are different (with same date),
+                        // add both messages.
+                        ret.push(prevState.messages[prevIndex++]);
+                        ret.push(messages[curIndex++]);
+                    }
+                }
             }
+
+            return {messages: ret};
         });
     }
 
@@ -86,7 +88,7 @@ export default class extends React.Component {
                 if (res) {
                     // If parsing is successful.
                     // Add messages into list.
-                    res.forEach(message => this.addMessage(message));
+                    this.addMessages(res);
                 }
             }
         };
