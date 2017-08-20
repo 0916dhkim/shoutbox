@@ -13,6 +13,9 @@ export default class extends React.Component {
         this.addMessages = this.addMessages.bind(this);
         this.updateChat = this.updateChat.bind(this);
 
+        // Sound effect for message.
+        this.soundEffect = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+
         this.state = {
             messages: [],
             lastUpdate: new Date().getTime()
@@ -24,12 +27,14 @@ export default class extends React.Component {
             var ret = [];
             var prevIndex = 0;
             var curIndex = 0;
+            var playSound = false;
 
             while (prevIndex < prevState.messages.length || curIndex < messages.length) {
                 if (prevIndex === prevState.messages.length) {
                     // If end of previous messages,
                     // add a new message.
                     ret.push(messages[curIndex++]);
+                    playSound = true;
                 } else if (curIndex === messages.length) {
                     // If end of new messages,
                     // add a previous message.
@@ -38,6 +43,7 @@ export default class extends React.Component {
                     // If new message is earlier than previous message,
                     // add a new message.
                     ret.push(messages[curIndex++]);
+                    playSound = true;
                 } else if (messages[curIndex].date > prevState.messages[prevIndex].date) {
                     // If previous message is earlier than new message,
                     // add a previous message.
@@ -55,8 +61,13 @@ export default class extends React.Component {
                         // add both messages.
                         ret.push(prevState.messages[prevIndex++]);
                         ret.push(messages[curIndex++]);
+                        playSound = true;
                     }
                 }
+            }
+
+            if (playSound) {
+                this.soundEffect.play();
             }
 
             return {
