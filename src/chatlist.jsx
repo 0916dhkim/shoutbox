@@ -1,5 +1,6 @@
 import React from 'react';
 import ChatElement from './chatelement.jsx';
+import style from './chat.css.js';
 
 function messageToChatElement(message) {
     return <ChatElement key={message.id} sender={message.sender} content={message.content} date={message.date} />
@@ -120,7 +121,9 @@ export default class extends React.Component {
 
     render() {
         return (
-            <div>{this.state.messages.map(messageToChatElement)}</div>
+            <div style={style.chatList}>
+                {this.state.messages.map(messageToChatElement)}
+            </div>
         );
     }
 }
