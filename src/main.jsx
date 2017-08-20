@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ChatList from './chatlist.jsx';
 
 class Greeting extends React.Component {
     render() {
@@ -9,4 +10,12 @@ class Greeting extends React.Component {
     }
 }
 
-ReactDOM.render(<Greeting />, document.getElementById('root'));
+ReactDOM.render(
+    (
+        <div>
+            <Greeting />
+            <ChatList />
+        </div>
+    ),
+    document.getElementById('root')
+);

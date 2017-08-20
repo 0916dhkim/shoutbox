@@ -76,7 +76,8 @@ function getMessagesSinceDate(date, callback) {
     // The first parameter of the callback is err.
     // The second parameter of the call back is an array of message objects.
     db.all(
-        'SELECT rowid AS id, * FROM messages WHERE date >= ' + date + ' ORDER BY date ASC',
+        'SELECT rowid AS id, * FROM messages WHERE date >= $date ORDER BY date ASC',
+        { $date: date },
         (err, rows) => {
             if (err) {
                 if (callback) {
@@ -90,13 +91,14 @@ function getMessagesSinceDate(date, callback) {
 };
 
 function getMessagesSinceID(id, callback) {
-    // Query all messages sent after given message ID, and call opetional callback function.
+    // Query all messages sent after given message ID, and call optional callback function.
     // The first parameter of the callback is err.
     // The second parameter of the callback is an array of message objects.
 
     // Find the date of the given message ID.
     db.get(
-        'SELECT date FROM messages WHERE rowid = ' + id,
+        'SELECT date FROM messages WHERE rowid = $id',
+        { $id: id },
         (err, row) => {
             if (err) {
                 if (callback) {
@@ -109,6 +111,29 @@ function getMessagesSinceID(id, callback) {
     );
 };
 
+function addMessage(message, callback) {
+    // Add a message into database, and call optional callback function.
+    // The first (and only) parameter of the callback function is err.
+    db.run(
+        'INSERT INTO messages VALUES($date, $sender, $content)',
+        {
+            $date: message.date,
+            $sender: message.sender,
+            $content: message.content
+        },
+        (err) => {
+            if (err) {
+                if (callback) {
+                    callback(err);
+                }
+            } else if (callback) {
+                callback();
+            }
+        }
+    );
+}
+
 // Export functions.
 exports.getMessagesSinceDate = getMessagesSinceDate;
 exports.getMessagesSinceID = getMessagesSinceID;
+exports.addMessage = addMessage;
