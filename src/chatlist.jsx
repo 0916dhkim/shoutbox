@@ -59,7 +59,10 @@ export default class extends React.Component {
                 }
             }
 
-            return {messages: ret};
+            return {
+                messages: ret,
+                lastUpdate: ret.length === 0 ? this.state.lastUpdate : ret[ret.length-1].date
+            };
         });
     }
 
