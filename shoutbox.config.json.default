@@ -1,4 +1,3 @@
 {
-    "dbFileName": "main.db",
-    "portNum": 3000
+    "dbFileName": "main.db"
 }

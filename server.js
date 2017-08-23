@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const config = require('./configparser.js');
 const chatdb = require('./chatdb.js');
+const port = process.env.PORT || 3000;
 
 // Serve static resources.
 app.use(express.static('dist'));
@@ -35,7 +36,7 @@ app.post('/message', (req, res) => {
     });
 });
 
-app.listen(config.portNum, () => { console.log('Shoutbox listening on port ' + config.portNum) });
+app.listen(port, () => { console.log('Shoutbox listening on port ' + port) });
 
 function sendMessages(err, messages, res) {
     if (err) {
