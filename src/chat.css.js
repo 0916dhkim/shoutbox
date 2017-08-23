@@ -7,8 +7,8 @@ export default {
     },
     greeting: {
         flex: '0 0 auto',
-        height: '50px',
-        fontSize: '40px',
+        height: '7vw',
+        fontSize: '5vw',
         textAlign: 'center',
         verticalAlign: 'middle',
         margin: '0'
@@ -23,25 +23,35 @@ export default {
         flexDirection: 'row'
     },
     chatSender: {
-        flex: '0 0 10em'
+        flex: '0 0 auto',
+        width: '20vmin',
+        fontSize: '3vmin',
+        wordWrap: 'break-word'
     },
     chatContent: {
         flex: '1 1 auto',
-        minWidth: '0'
+        minWidth: '0',
+        fontSize: '3vmin',
+        wordWrap: 'break-word'
     },
     chatDate: {
-        flex: '0 0 16em'
+        flex: '0 0 auto',
+        width: '38vmin',
+        fontSize: '3vmin'
     },
     chatForm: {
         flex: '0 0 auto',
-        height: '30px',
+        height: '5vmin',
         display: 'flex',
         flexDirection: 'row'
     },
     senderInput: {
-        flex: '1 1 auto'
+        flex: '0 0 auto',
+        width: '25vmin',
+        fontSize: '3vmin'
     },
     contentInput: {
-        flex: '6 6 auto'
+        flex: '1 1 auto',
+        fontSize: '3vmin'
     }
 };
