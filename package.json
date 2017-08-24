@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "production": "webpack -p",
     "build": "webpack",
-    "postinstall": "npm run build"
+    "postinstall": "npm run production"
   },
   "author": "Donghyeon Kim",
   "license": "ISC",
